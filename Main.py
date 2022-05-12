@@ -11,11 +11,12 @@ import keyboard
 ##########################
 wCam, hCam = 1920, 1080
 
-frameRxi = 200  # lado de la derecha
-frameRxd = 200  # lado de la izquierda
+frameRxi = 400  # lado de la derecha
+frameRxd = 400  # lado de la izquierda
 frameRyi = 200    # lado superior
 frameRyd = 200    #Lado inferior
 smoothening = 2
+velocidadt_real=0
 #########################
 index_list=[33, 359]
 x4=[0, 0]
