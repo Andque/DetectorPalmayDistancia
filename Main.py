@@ -7,6 +7,7 @@ import time
 import autopy
 from mediapipe import solutions as mp
 import pyautogui
+import keyboard
 ##########################
 wCam, hCam = 1920, 1080
 
@@ -49,10 +50,11 @@ atime = 0
 distancia_pixel = 1
 count_puno = 0
 puno_abierto = 1
+distanceCM=0
 ###########################
 wScr, hScr = autopy.screen.size()
 ############################# Array donde poner los datos, el primer dato son las veces en las que se ha cerrado el puño
-Datos=[0]
+Datos=[[0,0,0]]
 #el ultimo dato va a ser las veces que se ha cerrado el pucño
 # Loop
 with mp_face_mesh.FaceMesh(static_image_mode=False, max_num_faces=1, min_detection_confidence=0.5) as face_mesh:
@@ -118,7 +120,7 @@ with mp_face_mesh.FaceMesh(static_image_mode=False, max_num_faces=1, min_detecti
                 #print("distancia x real", Ax*dist_real_ojos/distancia_pixel)
                 #print("tiempo para velocidad", At)
                 print("Velocidad total",velocidadt_real)
-                Datos.append(velocidadt_real)
+
                 cv2.rectangle(img, (xm, ym), (xm + 5, ym + 5), (0, 0, 0), 3)
                 #convertir coordenadas a pantalla
                 x3 = np.interp(x1, (frameRxi, wCam - frameRxd), (0, wScr))
@@ -145,7 +147,7 @@ with mp_face_mesh.FaceMesh(static_image_mode=False, max_num_faces=1, min_detecti
                         puno_abierto=0
                         count_puno=count_puno+1
                         print("veces cerrado el puño", count_puno)
-                        Datos[0]=count_puno
+                        Datos[0][0]=count_puno
                     #modo click continuo si pones el indice y meñique arriba y el resto abajo y lo dejas presionado
                 if fingers[1] == 1 and fingers[2] == 0 and fingers[3] == 0 and fingers[4] == 1:
                     cv2.circle(img, (xm, ym),
@@ -161,6 +163,14 @@ with mp_face_mesh.FaceMesh(static_image_mode=False, max_num_faces=1, min_detecti
                 if fingers[0] == 1 and fingers[1] == 1 and fingers[2] == 1 and fingers[3] == 1 and fingers[4] ==1 :
                     puno_abierto=1
         cv2.imshow("Image", img)
+        Datos.append([velocidadt_real, distanceCM, time.time()])
         cv2.waitKey(1)
+        if  keyboard.is_pressed("q"):
+            print("Aa")
+            print(Datos)
+            a = np.array(Datos)
+            print(a)
+            np.savetxt('data3D.csv', Datos, delimiter=",")
+            break  # si presionas q sales y se guarda los datos en el cvs
 
 #una vez que sales del programa
